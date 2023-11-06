@@ -1,0 +1,13 @@
+# Exibir mensagem após atualização de senha
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Atualização de Senha Bem-sucedida</title>
+</head>
+<body>
+    <h1>Sua senha foi atualizada com sucesso!</h1>
+    <!-- Adicione links ou redirecionamentos relevantes aqui -->
+</body>
+</html>
