@@ -1,0 +1,63 @@
+# Página JSP para o formulário de inserção de prato
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class InserirPratoServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Obtenha os parâmetros do formulário
+        String nome = request.getParameter("nome");
+        String tipo = request.getParameter("tipo");
+        String ingredientes = request.getParameter("ingredientes");
+        
+        // Inserir o prato na tabela "prato" do banco de dados
+        try {
+            Connection connection = YourDatabaseConnection.getConnection(); // Implemente sua conexão com o banco de dados
+            String sql = "INSERT INTO prato (nome, tipo, ingredientes) VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nome);
+            preparedStatement.setString(2, tipo);
+            preparedStatement.setString(3, ingredientes);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Lide com exceções adequadamente
+        }
+        
+        // Redirecionar o usuário para uma página de confirmação ou outra página relevante
+        response.sendRedirect("inserirSucesso.jsp");
+    }
+}
+
+
+
+
+<%@ page language="java" contentType="text/html; pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inserir Prato</title>
+</head>
+<body>
+    <form action="InserirPratoServlet" method="post">
+        <label for="nome">Nome do Prato:</label>
+        <input type="text" name="nome" required><br>
+        
+        <label for="tipo">Tipo do Prato:</label>
+        <input type="text" name="tipo"><br>
+        
+        <label for="ingredientes">Ingredientes:</label>
+        <textarea name="ingredientes" rows="4" cols="50"></textarea><br>
+        
+        <input type="submit" value="Inserir Prato">
+    </form>
+</body>
+</html>
