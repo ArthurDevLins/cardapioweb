@@ -1,0 +1,91 @@
+# Listar todos os pratos cadastrados na tabela prato
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class ListarPratosServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Prato> pratos = new ArrayList<>();
+        
+        // Consultar todos os pratos na tabela "prato"
+        try {
+            Connection connection = YourDatabaseConnection.getConnection(); // Implemente sua conexão com o banco de dados
+            String sql = "SELECT * FROM prato";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                Prato prato = new Prato();
+                prato.setId(resultSet.getInt("id"));
+                prato.setNome(resultSet.getString("nome"));
+                prato.setTipo(resultSet.getString("tipo"));
+                prato.setIngredientes(resultSet.getString("ingredientes"));
+                pratos.add(prato);
+            }
+            
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Lide com exceções adequadamente
+        }
+        
+        // Coloque a lista de pratos no escopo da solicitação para a JSP
+        request.setAttribute("pratos", pratos);
+        
+        // Encaminhe a solicitação para a página JSP de listagem
+        request.getRequestDispatcher("listarPratos.jsp").forward(request, response);
+    }
+}
+
+
+
+public class Prato {
+    private int id;
+    private String nome;
+    private String tipo;
+    private String ingredientes;
+
+    // Getters e setters
+    // ...
+}
+
+
+
+<%@ page language="java" contentType="text/html; pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pratos</title>
+</head>
+<body>
+    <h1>Lista de Pratos</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Ingredientes</th>
+        </tr>
+        <c:forEach var="prato" items="${pratos}">
+            <tr>
+                <td>${prato.id}</td>
+                <td>${prato.nome}</td>
+                <td>${prato.tipo}</td>
+                <td>${prato.ingredientes}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</body>
+</html>
