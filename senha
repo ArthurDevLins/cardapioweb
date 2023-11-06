@@ -1,0 +1,20 @@
+# Para processar a atualização da senha
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class UpdatePasswordServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String newPassword = request.getParameter("password");
+        
+        // Aqui você deve implementar a lógica para atualizar a senha do usuário no banco de dados
+        // Por questões de segurança, você deve usar uma conexão segura com o banco de dados e criptografar a senha.
+
+        // Após a atualização bem-sucedida, redirecione o usuário para uma página de confirmação.
+        response.sendRedirect("updateSuccess.jsp");
+    }
+}
